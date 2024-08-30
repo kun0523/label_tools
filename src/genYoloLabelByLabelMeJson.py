@@ -5,7 +5,8 @@ import random
 import cv2
 import numpy as np
 
-CLASSES = ["dent", ]
+# CLASSES = ["dent", ]
+CLASSES = ["crack", "good" ]
 # CLASSES = ["background", "cell", ]
 # CLASSES = ["FK01", "FK02", "FK03", "924"]
 # CLASSES = ["rotate_0", "rotate_180"]
@@ -77,8 +78,8 @@ def baseYoloLabel2show(img_jpg_pth, label_txt_pth, save_pth=""):
 
     for bbox in bbox_lst:
         # cv2.polylines(img, [bbox.points], True, (0,0,255), 2)
-        cv2.circle(img, bbox.points[0], 5, (0,255,0), 5)
-        cv2.rectangle(img, bbox.points[0], bbox.points[1], (0,0,255), 3)
+        cv2.circle(img, bbox.points[0], 5, (0,255,0), 1)
+        cv2.rectangle(img, bbox.points[0], bbox.points[1], (0,0,255), 1)
 
     if (save_pth!=""):
         cv2.imwrite(save_pth, img)
@@ -102,53 +103,65 @@ def baseYoloLabel2show(img_jpg_pth, label_txt_pth, save_pth=""):
         - val
         - test
 '''
+# TODO: 加时间戳！
 if __name__ == "__main__":
 
-    # 查看标注结果
-    img_dir = r"E:\DataSets\dents_det\cut_patches\yolo\images"
-    save_dir = r"E:\DataSets\dents_det\cut_patches\yolo_show"
-    for root_dir, sub_dir, file_lst in os.walk(img_dir):
-        for file in file_lst:
-            if not file.endswith(".jpg"): continue
-            baseYoloLabel2show(
-                os.path.join(root_dir, file),
-                os.path.join(root_dir.replace("images", "labels"), file.replace(".jpg", ".txt")),
-                os.path.join(save_dir, file))
+    draw_bbox_base_yolo_label = True
 
-    # # 转换标注信息
-    # # TODO: 优化，兼容更多场景！！！
-    # org_dir = r"E:\DataSets\dents_det\cut_patches\with_dent"
-    # json_files = [f for f in os.listdir(org_dir) if f.endswith(".json")]
-    # save_dir_name = "yolo_det"
-    #
-    # train_num = int(0.8*len(json_files))
-    # random.shuffle(json_files)
-    # train_json_lst = json_files[:train_num]
-    # val_json_lst = json_files[train_num:]
-    # print(f"Train Data Num:{len(train_json_lst)} Val Data Num:{len(val_json_lst)}")
-    #
-    # last_dir = org_dir.split(os.sep)[-1]
-    # train_image_dir = org_dir.replace(last_dir, f"{save_dir_name}/images/train")
-    # createDir(train_image_dir)
-    # train_label_dir = org_dir.replace(last_dir, f"{save_dir_name}/labels/train")
-    # createDir(train_label_dir)
-    # for train_json in train_json_lst:
-    #     image_name = train_json.replace(".json", ".jpg")
-    #     shutil.copyfile(os.path.join(org_dir, image_name),
-    #                     os.path.join(train_image_dir, image_name))
-    #     parseJson2YoloTxt(os.path.join(org_dir, train_json),
-    #                       os.path.join(train_label_dir, train_json.replace(".json", ".txt")))
-    #
-    # val_image_dir = org_dir.replace(last_dir, f"{save_dir_name}/images/val")
-    # createDir(val_image_dir)
-    # val_label_dir = org_dir.replace(last_dir, f"{save_dir_name}/labels/val")
-    # createDir(val_label_dir)
-    # for val_json in val_json_lst:
-    #     image_name = val_json.replace(".json", ".jpg")
-    #     shutil.copyfile(os.path.join(org_dir, image_name),
-    #                     os.path.join(val_image_dir, image_name))
-    #     parseJson2YoloTxt(os.path.join(org_dir, val_json),
-    #                       os.path.join(val_label_dir, val_json.replace(".json", ".txt")))
+    if(draw_bbox_base_yolo_label):
+        # 查看标注结果
+        img_dir = r"E:\DataSets\edge_crack\cut_patches_0828\yolo_det05"
+        save_dir = r"E:\DataSets\edge_crack\cut_patches_0828\yolo_show"
+        for root_dir, sub_dir, file_lst in os.walk(img_dir):
+            for file in file_lst:
+                if not file.endswith(".jpg"): continue
+                baseYoloLabel2show(
+                    os.path.join(root_dir, file),
+                    os.path.join(root_dir.replace("images", "labels"), file.replace(".jpg", ".txt")),
+                    os.path.join(save_dir, file))
+    else:
+        # 转换标注信息
+        # TODO: 优化，兼容更多场景！！！
+        org_dir = r"E:\DataSets\edge_crack\cut_patches_0828\good"
+        json_files = [f for f in os.listdir(org_dir) if f.endswith(".json")]
+        save_dir_name = "yolo_det"
+
+        train_num = int(0.8*len(json_files))
+        random.shuffle(json_files)
+        train_json_lst = json_files[:train_num]
+        val_json_lst = json_files[train_num:]
+        print(f"Train Data Num:{len(train_json_lst)} Val Data Num:{len(val_json_lst)}")
+
+        path_split = org_dir.split(os.sep)
+        path_split.pop()
+        path_split.append(f"{save_dir_name}/images/train")
+        train_image_dir = os.sep.join(path_split)
+        createDir(train_image_dir)
+        path_split.pop()
+        path_split.append(f"{save_dir_name}/labels/train")
+        train_label_dir = os.sep.join(path_split)
+        createDir(train_label_dir)
+        for train_json in train_json_lst:
+            image_name = train_json.replace(".json", ".jpg")
+            shutil.copyfile(os.path.join(org_dir, image_name),
+                            os.path.join(train_image_dir, image_name))
+            parseJson2YoloTxt(os.path.join(org_dir, train_json),
+                              os.path.join(train_label_dir, train_json.replace(".json", ".txt")))
+
+        path_split.pop()
+        path_split.append(f"{save_dir_name}/images/val")
+        val_image_dir = os.sep.join(path_split)
+        createDir(val_image_dir)
+        path_split.pop()
+        path_split.append(f"{save_dir_name}/labels/val")
+        val_label_dir = os.sep.join(path_split)
+        createDir(val_label_dir)
+        for val_json in val_json_lst:
+            image_name = val_json.replace(".json", ".jpg")
+            shutil.copyfile(os.path.join(org_dir, image_name),
+                            os.path.join(val_image_dir, image_name))
+            parseJson2YoloTxt(os.path.join(org_dir, val_json),
+                              os.path.join(val_label_dir, val_json.replace(".json", ".txt")))
 
 
 

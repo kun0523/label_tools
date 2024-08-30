@@ -5,7 +5,6 @@ import json
 import random
 import shutil
 from tqdm import tqdm
-import time
 
 """
 根据已有的LabelMeJson 标注信息 裁剪图片 用于生成YOLO训练图片
@@ -105,8 +104,8 @@ def gen_patch_with_dent(img_dir_, save_dir_, patch_size_=1000, random_patch_num_
         with open(os.path.join(img_dir, json_file), "r") as fp:
             content = json.load(fp)
 
-        # if len(content["shapes"]) < 2:
-        #     continue
+        if len(content["shapes"]) > 1:
+            continue
 
         for bbox_id, obj in enumerate(content["shapes"]):
             # 默认是 矩形 两点框
@@ -216,28 +215,24 @@ def only_gen_lableme_json(img_dir_):
         label_obj.toJson()
 
 
-# 随机裁剪图片，生成labelme训练集
-# parse labelme json
-# 围绕 压痕位置 随机产生 patch  每个压痕随机产生5个子图
-# 生成 labelme 标注文件
-# 生成 yolo 标注文件
-# 还要产生一些没有压痕的图片作为负例
+# 随机+-90度旋转图片
+# 判断同级目录下有没有labelme标注文件，如果有的话把标注框也一同旋转
 CLASSES = ['dent', ]
 if __name__ == "__main__":
     patch_size = 1200
-    random_patch_num = 5
+    random_patch_num = 10
     mini_patch_area = 600*600
 
-    save_img_dir = r"E:\DataSets\dents_det\cut_patches\tmp"  # 保存切出的patch 和 labelme格式的标注文件
+    save_img_dir = r"E:\DataSets\dents_det\cut_patches\01"  # 保存切出的patch 和 labelme格式的标注文件
     create_dir(save_img_dir)
 
-    src_img_dir = r"E:\DataSets\dents_det\cut_cells\with_dent_difficult"
-    gen_patch_with_dent(src_img_dir, save_img_dir, patch_size, random_patch_num, mini_patch_area)
+    # src_img_dir = r"E:\DataSets\dents_det\cut_cells\with_dent"
+    # gen_patch_with_dent(src_img_dir, save_img_dir, patch_size, random_patch_num, mini_patch_area)
 
     # src_img_dir = r"E:\DataSets\dents_det\org_2D\with_label"
     # gen_patch_no_dent(src_img_dir, save_img_dir, patch_size, random_patch_num)
 
-    # only_gen_lableme_json(r"E:\DataSets\dents_det\cut_patches\no_dent")
+    only_gen_lableme_json(r"E:\DataSets\dents_det\cut_patches\no_dent")
 
 
 
