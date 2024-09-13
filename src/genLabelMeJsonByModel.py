@@ -52,17 +52,17 @@ class LabelMe:
             json.dump(res_dict, fp)
 
 # TODO： 兼容目标检测 obb  seg
-CLASSES = ["crack", ]
+CLASSES = ["dent", ]
 # CLASSES = ["FK01", "FK02", "FK03", "924"]
 # CLASSES = ["rotate_0", "rotate_180"]
 if __name__ == "__main__":
-    model_pth = r"D:\share_dir\pd_edge_crack\workdir\det_crack_rect\yolom_freeze9_sgd_aug4\weights\yolov8_det04.pt"
+    model_pth = r"D:\share_dir\impression_detect\workdir\yolov8\det_dent_d2\yolov8n_freeze9_sgd2\weights\yolov8_det01.pt"
     model = YOLO(model_pth)
 
-    save_dir = r"E:\DataSets\edge_crack\cut_patches_0828\tmp01"
+    save_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905\tmp"
     createDir(save_dir)
 
-    img_dir = r"E:\DataSets\edge_crack\cut_patches_0828\tmp"
+    img_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905\ok"
     img_set = set(f for f in os.listdir(img_dir) if f.endswith(".jpg"))
     has_labeled_img_set = set(f.replace(".json", ".jpg") for f in os.listdir(img_dir) if f.endswith(".json"))
     need_label_img_list = list(img_set.difference(has_labeled_img_set))

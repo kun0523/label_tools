@@ -79,8 +79,8 @@ def splitTrainTest(src_dir, dst_dir):
 IMG_TYPE = ["jpg", "jpeg", "png", "bmp"]  # 除这些格式以外的格式会被过滤掉
 if __name__ == "__main__":
 
-    src_dir = r"E:\DataSets\edge_crack\cut_patches_0830\crack"
-    dst_dir = r"E:\DataSets\edge_crack\classify_ultralytics0830\TMP"
+    src_dir = r"E:\DataSets\vacuum_package\cutPatches0909\null"
+    dst_dir = r"E:\DataSets\vacuum_package\ultralytics_cls\TMP"
     splitTrainTest(src_dir, dst_dir)
 
     # src_dir = r"E:\DataSets\edge_crack\cut_patches_0820"

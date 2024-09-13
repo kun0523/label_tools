@@ -5,8 +5,8 @@ import random
 import cv2
 import numpy as np
 
-# CLASSES = ["dent", ]
-CLASSES = ["crack", "good" ]
+CLASSES = ["dent", ]
+# CLASSES = ["crack", "good" ]
 # CLASSES = ["background", "cell", ]
 # CLASSES = ["FK01", "FK02", "FK03", "924"]
 # CLASSES = ["rotate_0", "rotate_180"]
@@ -32,10 +32,14 @@ def parseJson2YoloTxt(json_pth, save_pth):
             label_str += f"{CLASSES.index(obj['label'])} "
             # det
             if(obj["shape_type"] == "polygon"):
-                r = cv2.minAreaRect(np.array(obj["points"]).reshape(-1,1,2).astype(int))
-                r = cv2.boxPoints(r)
-                tlx, tly, brx, bry = min(r[:,0]), min(r[:,1]), max(r[:,0]), max(r[:,1])
-                coords = np.array([[tlx, tly], [brx, bry]], dtype=np.float32)
+                # r = cv2.minAreaRect(np.array(obj["points"]).reshape(-1,1,2).astype(int))
+                # r = cv2.boxPoints(r)
+                # tlx, tly, brx, bry = min(r[:,0]), min(r[:,1]), max(r[:,0]), max(r[:,1])
+                # coords = np.array([[tlx, tly], [brx, bry]], dtype=np.float32)
+                coords = np.array(obj["points"], dtype=np.float32)
+                for p in coords:
+                    label_str += f"{p[0]/imgw:.6f} {p[1]/imgh:.6f} "
+
             else:
                 box = np.array(obj["points"])
                 tlx = box[:, 0].min()
@@ -43,11 +47,11 @@ def parseJson2YoloTxt(json_pth, save_pth):
                 brx = box[:, 0].max()
                 bry = box[:, 1].max()
                 coords = np.array([(tlx, tly), (brx, bry)])
-            cx = coords[:, 0].mean()
-            cy = coords[:, 1].mean()
-            w = coords[1, 0] - coords[0, 0]
-            h = coords[1, 1] - coords[0, 1]
-            label_str += f"{cx/imgw:.6f} {cy/imgh:.6f} {w/imgw:.6f} {h/imgh:.6f}"
+                cx = coords[:, 0].mean()
+                cy = coords[:, 1].mean()
+                w = coords[1, 0] - coords[0, 0]
+                h = coords[1, 1] - coords[0, 1]
+                label_str += f"{cx/imgw:.6f} {cy/imgh:.6f} {w/imgw:.6f} {h/imgh:.6f}"
 
             # # poly
             # coords = [(x/imgw, y/imgh) for x, y in obj['points']]
@@ -63,10 +67,17 @@ def baseYoloLabel2show(img_jpg_pth, label_txt_pth, save_pth=""):
     class BBox:
         def __init__(self, yolo_label_line, imgH, imgW):
             self.cls = yolo_label_line[0]
-            cx, cy, w, h = np.array(yolo_label_line[1:]).astype(np.float32)
-            width, height = w*imgW, h*imgH
-            cx, cy = cx*imgW, cy*imgH
-            self.points = np.array([cx-width/2, cy-height/2, cx+width/2, cy+height/2]).reshape(-1, 2).astype(int)
+            if len(yolo_label_line[1:])>4:
+                self.points = np.array(yolo_label_line[1:]).astype(np.float32).reshape(-1,2)
+                self.points[:, 0] *= imgW
+                self.points[:, 1] *= imgH
+                self.points = self.points.astype(int)
+
+            else:
+                cx, cy, w, h = np.array(yolo_label_line[1:]).astype(np.float32)
+                width, height = w*imgW, h*imgH
+                cx, cy = cx*imgW, cy*imgH
+                self.points = np.array([cx-width/2, cy-height/2, cx+width/2, cy+height/2]).reshape(-1, 2).astype(int)
 
     img = cv2.imread(img_jpg_pth)
     imgh, imgw, _ = img.shape
@@ -110,8 +121,8 @@ if __name__ == "__main__":
 
     if(draw_bbox_base_yolo_label):
         # 查看标注结果
-        img_dir = r"E:\DataSets\edge_crack\cut_patches_0828\yolo_det05"
-        save_dir = r"E:\DataSets\edge_crack\cut_patches_0828\yolo_show"
+        img_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\yolo_det"
+        save_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\yolo_show"
         for root_dir, sub_dir, file_lst in os.walk(img_dir):
             for file in file_lst:
                 if not file.endswith(".jpg"): continue
@@ -122,7 +133,7 @@ if __name__ == "__main__":
     else:
         # 转换标注信息
         # TODO: 优化，兼容更多场景！！！
-        org_dir = r"E:\DataSets\edge_crack\cut_patches_0828\good"
+        org_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\total_labeled"
         json_files = [f for f in os.listdir(org_dir) if f.endswith(".json")]
         save_dir_name = "yolo_det"
 
