@@ -4,15 +4,18 @@ import cv2
 import numpy as np
 import time
 
+# 小型号  1200*2400
+# 大型号  3200*3200
+# 全图 1200*1200 缺陷 40*50 ~ 0.1%
 FRAME_SCALE_RATIO = [1.0, 0.8, 0.5, 0.3, 0.1]
 RATIO_IND = 0
-WINDOW_SIZE = (1200, 800)
+WINDOW_SIZE = (640, 640)
 ORG_FRAME = np.zeros((1024, 1024, 3), dtype=np.uint8)
 SHOW_FRAME = np.zeros((1024, 1024, 3), dtype=np.uint8)
 IMAGE_NAME = "xxxx.jpg"
 WINDOW_NAME = "SHOW_IMG"
-SRC_DIR = r"E:\DataSets\vacuum_package\org\0801"
-SAVE_DIR = r"E:\DataSets\vacuum_package\test1"
+SRC_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\OK"
+SAVE_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\cutPatches640\OK"
 IMAGE_LST = []
 IMG_INDEX = 0
 
@@ -23,7 +26,7 @@ def get_rect_points(center_x, center_y, rect_w, rect_h, max_w, max_h):
     br_y = int(min(max_h, center_y + rect_h/2))
     return (tl_x, tl_y), (br_x, br_y)
 
-# 鼠标悬浮事件
+# 鼠标悬浮事件 
 def hover_event(event, x, y, flags, params):
     global ORG_FRAME
     global SHOW_FRAME

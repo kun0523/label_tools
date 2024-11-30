@@ -79,32 +79,34 @@ def splitTrainTest(src_dir, dst_dir):
 IMG_TYPE = ["jpg", "jpeg", "png", "bmp"]  # 除这些格式以外的格式会被过滤掉
 if __name__ == "__main__":
 
-    src_dir = r"E:\DataSets\vacuum_package\cutPatches0909\null"
-    dst_dir = r"E:\DataSets\vacuum_package\ultralytics_cls\TMP"
-    splitTrainTest(src_dir, dst_dir)
+    # src_dir = r"E:\DataSets\edge_crack\cut_patches_0905"
+    # dst_dir = r"E:\DataSets\edge_crack\classify_ppcls_1106"
+    # for parent_dir, sub_dirs, file_lst in os.walk(src_dir):
+    #     for sub_dir in sub_dirs:
+    #         splitTrainTest(os.path.join(parent_dir, sub_dir), dst_dir)
 
-    # src_dir = r"E:\DataSets\edge_crack\cut_patches_0820"
-    # assert os.path.isdir(src_dir), f"Error src_dir:{src_dir} incorrect!!"
-    #
-    # dst_dir = createDir(r"E:\DataSets\edge_crack\paddlecls_split0719")
-    # train_percent = 80
-    # train_sample_lst, val_sample_lst = [], []
-    # total_sample_num = 0
-    # for parent_dir, sub_dir, file_lst in os.walk(src_dir):
-    #     for file in file_lst:
-    #         if not file.split(".")[-1] in IMG_TYPE:
-    #             continue
-    #
-    #         total_sample_num += 1
-    #         rand = random.randint(0, 100)
-    #         if rand < train_percent:
-    #             train_sample_lst.append(Sample(os.path.join(parent_dir, file), is_train_data_=True))
-    #         else:
-    #             val_sample_lst.append(Sample(os.path.join(parent_dir, file), is_train_data_=False))
-    #
-    # createDatasets(train_sample_lst, dst_dir, "train")
-    # createDatasets(val_sample_lst, dst_dir, "val")
-    #
-    # print(f"Total Sample Num: {total_sample_num}")
-    # print(f"Train Sample Num: {len(train_sample_lst)}  Ratio: {len(train_sample_lst)/total_sample_num*100:.2f}%")
-    # print(f"Val Sample Num: {len(val_sample_lst)}  Ratio: {len(val_sample_lst)/total_sample_num*100:.2f}%")
+    src_dir = r"E:\DataSets\edge_crack\cut_patches_0905"
+    assert os.path.isdir(src_dir), f"Error src_dir:{src_dir} incorrect!!"
+
+    dst_dir = createDir(r"E:\DataSets\edge_crack\classify_ppcls_1106")
+    train_percent = 80
+    train_sample_lst, val_sample_lst = [], []
+    total_sample_num = 0
+    for parent_dir, sub_dir, file_lst in os.walk(src_dir):
+        for file in file_lst:
+            if not file.split(".")[-1] in IMG_TYPE:
+                continue
+
+            total_sample_num += 1
+            rand = random.randint(0, 100)
+            if rand < train_percent:
+                train_sample_lst.append(Sample(os.path.join(parent_dir, file), is_train_data_=True))
+            else:
+                val_sample_lst.append(Sample(os.path.join(parent_dir, file), is_train_data_=False))
+
+    createDatasets(train_sample_lst, dst_dir, "train")
+    createDatasets(val_sample_lst, dst_dir, "val")
+
+    print(f"Total Sample Num: {total_sample_num}")
+    print(f"Train Sample Num: {len(train_sample_lst)}  Ratio: {len(train_sample_lst)/total_sample_num*100:.2f}%")
+    print(f"Val Sample Num: {len(val_sample_lst)}  Ratio: {len(val_sample_lst)/total_sample_num*100:.2f}%")

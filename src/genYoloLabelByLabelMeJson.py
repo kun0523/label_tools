@@ -5,7 +5,8 @@ import random
 import cv2
 import numpy as np
 
-CLASSES = ["dent", ]
+CLASSES = ["a", 'b', 'c', ]
+# CLASSES = ["dent", ]
 # CLASSES = ["crack", "good" ]
 # CLASSES = ["background", "cell", ]
 # CLASSES = ["FK01", "FK02", "FK03", "924"]
@@ -117,12 +118,13 @@ def baseYoloLabel2show(img_jpg_pth, label_txt_pth, save_pth=""):
 # TODO: 加时间戳！
 if __name__ == "__main__":
 
-    draw_bbox_base_yolo_label = True
+    draw_bbox_base_yolo_label = False
 
     if(draw_bbox_base_yolo_label):
         # 查看标注结果
-        img_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\yolo_det"
-        save_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\yolo_show"
+        img_dir = r"E:\DataSets\TmpDLTrainData\detection\pokemon_det\yolo_det"
+        save_dir = img_dir.replace("yolo_det", "yolo_show")
+        assert os.path.isdir(save_dir), "Error Save Dir not exist!!"
         for root_dir, sub_dir, file_lst in os.walk(img_dir):
             for file in file_lst:
                 if not file.endswith(".jpg"): continue
@@ -133,7 +135,7 @@ if __name__ == "__main__":
     else:
         # 转换标注信息
         # TODO: 优化，兼容更多场景！！！
-        org_dir = r"E:\DataSets\dents_det\org_2D\baoma\cutPatches0905_det\total_labeled"
+        org_dir = r"E:\DataSets\TmpDLTrainData\detection\pokemon_det\complex_bg_random_size"
         json_files = [f for f in os.listdir(org_dir) if f.endswith(".json")]
         save_dir_name = "yolo_det"
 
