@@ -5,11 +5,12 @@ import random
 import cv2
 import numpy as np
 
-CLASSES = ["a", 'b', 'c', ]
+# CLASSES = ["kk", ]
 # CLASSES = ["dent", ]
 # CLASSES = ["crack", "good" ]
 # CLASSES = ["background", "cell", ]
 # CLASSES = ["FK01", "FK02", "FK03", "924"]
+CLASSES = ["a", "b", "c"]
 # CLASSES = ["rotate_0", "rotate_180"]
 
 def createDir(target_dir):
@@ -135,9 +136,9 @@ if __name__ == "__main__":
     else:
         # 转换标注信息
         # TODO: 优化，兼容更多场景！！！
-        org_dir = r"E:\DataSets\TmpDLTrainData\detection\pokemon_det\complex_bg_random_size"
+        org_dir = r"E:\Tmp\pack\datasets_backup\random_color_size"
         json_files = [f for f in os.listdir(org_dir) if f.endswith(".json")]
-        save_dir_name = "yolo_det"
+        save_dir_name = "random_color_size_yolo"
 
         train_num = int(0.8*len(json_files))
         random.shuffle(json_files)

@@ -54,19 +54,20 @@ class LabelMe:
             json.dump(res_dict, fp)
 
 # TODO： 兼容目标检测 obb  seg
-CLASSES = ["a", 'b', 'c', ]
+# CLASSES = ["a", 'b', 'c', ]
 # CLASSES = ["dent", ]
-# CLASSES = ["FK01", "FK02", "FK03", "924"]
+CLASSES = ["FK01", "FK02", "FK03", "924"]
 # CLASSES = ["rotate_0", "rotate_180"]
 if __name__ == "__main__":
     # model_pth = r"D:\share_dir\impression_detect\workdir\yolov10\dent_det\yolov10s_freeze8_use_sgd8\weights\yolov10_det_05.pt"
-    model_pth = r"E:\AI_edu\trainDemo\PokemonDet\yolo11n_complex_bg2\weights\best.pt"
+    # model_pth = r"E:\AI_edu\trainDemo\PokemonDet\yolo11n_complex_bg2\weights\best.pt"
+    model_pth = r"D:\share_dir\pd_mix\workdir\det_words_0308\yolov12s2\weights\best.pt"
     model = YOLO(model_pth)
 
-    save_dir = r"E:\DataSets\TmpDLTrainData\detection\pokemon_det\TMP"
+    save_dir = r"E:\DataSets\pd_mix\pcb_part\0311_new"
     createDir(save_dir)
 
-    img_dir = r"E:\DataSets\TmpDLTrainData\detection\pokemon_det\random_color_size"
+    img_dir = r"E:\DataSets\pd_mix\pcb_part\0311"
     img_set = set(f for f in os.listdir(img_dir) if f.endswith(".jpg"))
     has_labeled_img_set = set(f.replace(".json", ".jpg") for f in os.listdir(img_dir) if f.endswith(".json"))
     need_label_img_list = list(img_set.difference(has_labeled_img_set))

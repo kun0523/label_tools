@@ -14,8 +14,8 @@ ORG_FRAME = np.zeros((1024, 1024, 3), dtype=np.uint8)
 SHOW_FRAME = np.zeros((1024, 1024, 3), dtype=np.uint8)
 IMAGE_NAME = "xxxx.jpg"
 WINDOW_NAME = "SHOW_IMG"
-SRC_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\OK"
-SAVE_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\cutPatches640\OK"
+SRC_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\NG"
+SAVE_DIR = r"E:\DataSets\dents_det\org_D1\gold_scf\cutPatches240\NG"
 IMAGE_LST = []
 IMG_INDEX = 0
 
